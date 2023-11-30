@@ -158,8 +158,8 @@ cc2_data$date <- format(cc2_data$date, "%Y%m%d")
 
 **Code:**
 ```{R}
-cc2_data_filtered <- cc2_data %>%
-  filter(!is.na(date), date <= 20001300)
+cc2_data_final <- cc2_data %>%
+  filter(!is.na(date), date >= 20001300)
 ```
 
 \clearpage
@@ -168,7 +168,7 @@ cc2_data_filtered <- cc2_data %>%
 
 **Code:**
 ```{R}
-combined_data <- rbind(cc_data, cc2_data)
+combined_data <- rbind(cc_data_final, cc2_data_final)
 ```
 \clearpage
 
