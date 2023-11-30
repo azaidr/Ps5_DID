@@ -236,12 +236,31 @@ lc_data_filtered <- lc_data %>%
 | var8     | class    |                 |
 
 **Code:**
+```{R}
+lc2_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/lc2.dta")
+lc2_data <- lc2_data %>%
+  rename(parcel = var1,
+         date = var2,
+         sales = var3,
+         acres = var4,
+         sqft = var5,
+         constryr = var6,
+         class = var8) %>%
+  mutate(cc = 0, lc = 1) 
 
+lc2_data_filtered <- lc2_data %>%
+  filter(!is.na(date), date <= 20001300)
+
+```
 \clearpage
 
 ### **Question: Generate three new variables: `cc` equal to 0 for all observations; `lc` equal 1 for all observations and `usecode` equal to 20 for all observations.**
 
 **Code:**
+```{R}
+lc2_data <- lc2_data %>%
+  mutate(cc = 0, lc = 1, usecode = 20)
+```
 
 \clearpage
 
