@@ -27,6 +27,12 @@ This exercise uses data from Lucas Davis' paper, "The Effect of Health Risk on H
 Load any R packages you will be using:
 
 **Code:**
+```{R}
+library(lfe)
+library(ggplot2)
+library(haven)
+library(dplyr)
+```
 
 \clearpage
 
@@ -52,22 +58,42 @@ Thus far in the course the datasets we have been working with were already assem
 | var23    | class    |                              |
 
 **Code:**
+```{R}
 
+cc_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/cc.dta")
+cc_data <- cc_data %>%
+  rename(parcel = var1,
+         date = var3,
+         usecode = var10,
+         sales = var16,
+         acres = var17,
+         sqft = var19,
+         constryr = var20,
+         class = var23) %>%
+  select(parcel, date, usecode, sales, acres, sqft, constryr, class)
+```
 \clearpage
 
 ### **Question: Next we want to limit our observations to observations where the sales date is reported and that are in the time period we are interested in (date\<=20001300) and the type of property we are interested in, which will have a usecode of 20.**
 
 **Code:**
-
+```{R}
+cc_data_filtered <- cc_data %>%
+  filter(!is.na(date), date <= 20001300, usecode == 20)
+```
 \clearpage
 
 ### **Question: Finally we need to generated two new variables: a Churchill county indicator, `cc`, and a Lyon County indicator, `lc'.   Set`cc`equal to 1 for all observations and`lc\` which will equal 0 for all observations.**
 
 **Code:**
-
+```{R}
+# Add the 'cc' and 'lc' indicators
+cc_data_final <- cc_data_filtered %>%
+  mutate(cc = 1, lc = 0)
+```
 \clearpage
 
-### **Question: Next open the `cc2.dta` file. We need to make this set of sales records compatible with the set of sales records we just cleaned. The way the variables are coded in this data however are different so we need to rename the relevant columns so that the names match up.** 
+### **Question: Next open the `cc2.dta` file. We need to make this set of sales records compatible with the set of sales records we just cleaned. The way the variables are coded in this data however are different so we need to rename the relevant columns so that the names match up.**
 
 | Old Name    | New Name | Description     |
 |-------------|----------|-----------------|
@@ -81,13 +107,32 @@ Thus far in the course the datasets we have been working with were already assem
 | class       | class    |                 |
 
 **Code:**
+```{R}
+cc2_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/cc2.dta")
+# renamingg  variables to match the cc.dta dataset
+cc2_data <- cc2_data %>%
+  rename(parcel = parcel__,
+         date = sale_date,
+         usecode = land_use,
+         sales = sales_price,
+         acres = acreage,
+         sqft = sq_ft,
+         constryr = yr_blt,
+         class = class)
+```
 
 \clearpage
 
 ### **Question: Here too we need to generated two new variables: `cc` which will be equal to 1 for all observations and `lc` which will equal 0 for all observations.**
 
 **Code:**
+```{R}
+cc2_data <- cc2_data %>%
+  mutate(cc = 1, lc = 0)
 
+cc_data <- cc_data %>%
+  mutate(cc = 1, lc = 0)
+```
 \clearpage
 
 ### **Question: Compare the formatting of the date variable in the two datasets you are working with. What do you notice? How is the date formatted in the first dataset you loaded and how is it formatted in the second?**
@@ -99,22 +144,31 @@ Thus far in the course the datasets we have been working with were already assem
 ### **Question: Convert the dates reported in the second dataset to the format used in the first (YYYYMMDD).**
 
 **Code:**
+```{R}
+
+  
+```
 
 \clearpage
 
 ### **Question: For this dataset we limit our observations to observations where (date\>=20001300) and observations where the sales date is reported.**
 
 **Code:**
+```{R}
+
+```
 
 \clearpage
 
-### **Question: Keep the same variables as in the first data set and merge the two data sets so that the observations from second datasets are added as new rows to the first dataset.** 
+### **Question: Keep the same variables as in the first data set and merge the two data sets so that the observations from second datasets are added as new rows to the first dataset.**
 
 **Code:**
-
+```{R}
+combined_data <- rbind(cc_data, cc2_data)
+```
 \clearpage
 
-### **Question: Next open the `lc.dta` file which has sales data for Lyons county. We need to make this set of sales records compatible as well. Rename the variables as follows.** 
+### **Question: Next open the `lc.dta` file which has sales data for Lyons county. We need to make this set of sales records compatible as well. Rename the variables as follows.**
 
 | Old Name | New Name | Description     |
 |----------|----------|-----------------|
@@ -128,22 +182,42 @@ Thus far in the course the datasets we have been working with were already assem
 | var11    | class    |                 |
 
 **Code:**
-
+```{R}
+lc_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/lc.dta")
+lc_data <- lc_data %>%
+  rename(parcel = var1,
+         date = var2,
+         usecode = var3,
+         sales = var4,
+         acres = var5,
+         sqft = var6,
+         constryr = var7,
+         class = var11)
+```
 \clearpage
 
 ### **Question: Here too we need to generated two new variables but this time set `cc` equal to 0 for all observations and `lc` equal 1 for all observations.**
 
 **Code:**
+```{R}
+lc_data <- lc_data %>%
+  mutate(cc = 0, lc = 1)
+```
 
 \clearpage
 
 ### **Question: Keep observations where the sales date is reported and that are in the time period we are interested in (date\<=20001300) and the type of property we are interested in, which will have a usecode of 20.**
 
 **Code:**
-
+```{R}
+lc_data_filtered <- lc_data %>%
+  filter(!is.na(date),
+         date <= 20001300,
+         usecode == 20) 
+```
 \clearpage
 
-### **Question: Check that everything is compatible and add these observations to your dataset.** 
+### **Question: Check that everything is compatible and add these observations to your dataset.**
 
 **Code:**
 
@@ -225,19 +299,19 @@ Thus far in the course the datasets we have been working with were already assem
 
 \clearpage
 
-### **Question: Modify the class variable so that it is discreet: round the value up to the nearest 0.5 increment between 0 and 4.5. Set any values greater than 5 to 0.** 
+### **Question: Modify the class variable so that it is discreet: round the value up to the nearest 0.5 increment between 0 and 4.5. Set any values greater than 5 to 0.**
 
 **Code:**
 
 \clearpage
 
-### **Question: Lyons and Churchill counties could be using the same parcel numbers for different parcels in each county (ie they may each have a parcel identified as 205 within their separate systems). Modify the parcel variable so parcel numbers are uniquely identified.** 
+### **Question: Lyons and Churchill counties could be using the same parcel numbers for different parcels in each county (ie they may each have a parcel identified as 205 within their separate systems). Modify the parcel variable so parcel numbers are uniquely identified.**
 
 **Code:**
 
 \clearpage
 
-### **Question: Create a identifying variable that identifies (ie will be the same for) all home sales that occurred within a particular month in a specific county.** 
+### **Question: Create a identifying variable that identifies (ie will be the same for) all home sales that occurred within a particular month in a specific county.**
 
 **Code:**
 
@@ -267,7 +341,7 @@ Thus far in the course the datasets we have been working with were already assem
 
 # Analysis:
 
-## **Question: Specify and then estimate the standard difference-in-differences estimator to look at how home sales prices changed between Churchill and Lyons county after the emergence of the cancer cluster. Estimate your specification on the log of real home sales and the sales price.** 
+## **Question: Specify and then estimate the standard difference-in-differences estimator to look at how home sales prices changed between Churchill and Lyons county after the emergence of the cancer cluster. Estimate your specification on the log of real home sales and the sales price.**
 
 **Answer:**
 
@@ -312,7 +386,7 @@ Thus far in the course the datasets we have been working with were already assem
 
 \clearpage
 
-## **Question: We would like to check for parallel trends in the pre-period. Using only the data prior to the emergence of the cancer cluster (1990-1998), create an indicator set to 1 for 1990-1994 and set to 0 for 1995-1998. Use your basic specification to test for parallel trends and discuss your results.** 
+## **Question: We would like to check for parallel trends in the pre-period. Using only the data prior to the emergence of the cancer cluster (1990-1998), create an indicator set to 1 for 1990-1994 and set to 0 for 1995-1998. Use your basic specification to test for parallel trends and discuss your results.**
 
 **Code:**
 
@@ -320,7 +394,7 @@ Thus far in the course the datasets we have been working with were already assem
 
 \clearpage
 
-## **Question: (2 pages) In order to better asses how home prices in Churchill and Lyon counties compare to each other over time, calculate the average price of sold homes in each county for each 6 month period. of the data. Plot the evolution of this average for the two counties on the same graph. Include bars to indicate the confidence interval of the calculated means.** 
+## **Question: (2 pages) In order to better asses how home prices in Churchill and Lyon counties compare to each other over time, calculate the average price of sold homes in each county for each 6 month period. of the data. Plot the evolution of this average for the two counties on the same graph. Include bars to indicate the confidence interval of the calculated means.**
 
 Hint: You want a plot that looks something like the third set of graphs on the following page: <http://www.sthda.com/english/wiki/ggplot2-error-bars-quick-start-guide-r-software-and-data-visualization>
 
@@ -345,7 +419,7 @@ Hint: You want a plot that looks something like the third set of graphs on the f
 | vcc1    | Upper confidence interval for indexcc   |
 | vcc2    | Lower confidence interval for indexcc   |
 
-## **Question: (2 pages) Replicate figures 2 from the paper. Make your figure as visually appealing and informative as possible.** 
+## **Question: (2 pages) Replicate figures 2 from the paper. Make your figure as visually appealing and informative as possible.**
 
 **Code:**
 
