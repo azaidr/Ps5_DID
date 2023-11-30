@@ -267,6 +267,13 @@ lc2_data <- lc2_data %>%
 ### **Question: Keep observations where the sales date is reported and that are in the time period we are interested in (date\>20001300). Check that everything is compatible and add these observations to our dataset.**
 
 **Code:**
+```{R}
+lc2_data_filtered <- lc2_data %>%
+  filter(!is.na(date),  # Keeping observations with a reported sale date
+         date > 20001300)
+```
+
+This QUestion is missing the second part
 
 \clearpage
 
