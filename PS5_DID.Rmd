@@ -269,7 +269,7 @@ lc2_data <- lc2_data %>%
 **Code:**
 ```{R}
 lc2_data_filtered <- lc2_data %>%
-  filter(!is.na(date),  # Keeping observations with a reported sale date
+  filter(!is.na(date),
          date > 20001300)
 ```
 
