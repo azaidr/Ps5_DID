@@ -12,9 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Group Member 1: Reda Abouzaid**
 
-**Group Member 2:**
+**Group Member 2: Irving Hu**
 
-**Group Member 3:**
+**Group Member 3: Jiayue(Tiffany) Liu**
 
 # Empirical Analysis from Lucas Davis' (2004, American Economic Review)
 
@@ -145,8 +145,11 @@ cc_data <- cc_data %>%
 
 **Code:**
 ```{R}
-
-  
+# using lubridate
+library(lubridate)
+# Convert "date" column to Date class in "MMDDYY" format
+cc2_data$date <- mdy(cc2_data$date)
+cc2_data$date <- format(cc2_data$date, "%Y%m%d") 
 ```
 
 \clearpage
@@ -155,7 +158,8 @@ cc_data <- cc_data %>%
 
 **Code:**
 ```{R}
-
+cc2_data_filtered <- cc2_data %>%
+  filter(!is.na(date), date <= 20001300)
 ```
 
 \clearpage
