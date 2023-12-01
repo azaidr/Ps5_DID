@@ -406,13 +406,20 @@ combined_data <- combined_data %>%
 ### **Question: Modify the class variable so that it is discreet: round the value up to the nearest 0.5 increment between 0 and 4.5. Set any values greater than 5 to 0.**
 
 **Code:**
+```{r}
+combined_data <- combined_data %>%
+  mutate(class = ifelse(class > 5, 0, round(class * 2) / 2))
+```
 
 \clearpage
 
 ### **Question: Lyons and Churchill counties could be using the same parcel numbers for different parcels in each county (ie they may each have a parcel identified as 205 within their separate systems). Modify the parcel variable so parcel numbers are uniquely identified.**
 
 **Code:**
-
+```{r}
+combined_data <- combined_data %>%
+  mutate(parcel = (2*combined_data$cc*100000)+(3*combined_data$lc*100000)+combined_data$parcel)
+```
 \clearpage
 
 ### **Question: Create a identifying variable that identifies (ie will be the same for) all home sales that occurred within a particular month in a specific county.**
