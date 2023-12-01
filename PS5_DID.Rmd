@@ -474,7 +474,25 @@ combined_data <- combined_data %>%
 ## **Question: Create a table comparing baseline characteristics between Lyon and Churchill prior to 2000. To do this, USE LOOPING to run several models where a characteristic of interest is regressed on the Churchill county indicator. Store each regression model and report the results. what do they tell you and why they are important?**
 
 **Answer:**
+```{r}
+#sales /acres /sqft /constryr
+variable_names <- c("sales", "acres","sqft","constryr")
+characteristics_model <- list()
 
+for(i in variable_names){
+  formula <-formula(paste(i, "~cc"))
+  model <- lm(formula, data = combined_data)
+  characteristics_model[[i]] <- model
+}
+
+for(i in variable_names){
+  print(summary(characteristics_model[[i]]))
+}
+```
+The sales price for the two county prior 2000 is kind of different.
+The acres for the two county prior 2000 is different.
+The square footage for the two county prior is similar, since the p-vale is not statistically significant.
+The construction year for the two county prior is different.
 \clearpage
 
 # Analysis:
