@@ -303,6 +303,40 @@ combined_data <- rbind(combined_data, lc2_data_filtered)
 -   The quarter (1-4) within the year
 
 **Code:**
+```{r}
+combined_data$date <- as.Date(combined_data$date, format = "%Y%m%d")
+```
+
+```{r}
+# Variables: sales_year, sales_month,sales_day
+combined_data <- combined_data %>%
+  mutate(sales_year = year(date),
+         sales_month = month(date),
+         sales_day = day(date))
+```
+
+```{r}
+# Variables: home_age, home_age_sqr
+combined_data <- combined_data %>%
+  mutate(home_age = sales_year - constryr ,
+         home_age_sqr = home_age^2)
+```
+
+```{r}
+# Variables: acre_squared
+```
+
+```{r}
+# Variables: log_nomi_price
+combined_data <- combined_data %>%
+  mutate(log_nomi_price = log(sales))
+```
+
+```{r}
+# Variables: quarter_within
+combined_data <- combined_data %>%
+  mutate(quarter_within = quarter(date))
+```
 
 \clearpage
 
