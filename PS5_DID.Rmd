@@ -32,6 +32,7 @@ library(lfe)
 library(ggplot2)
 library(haven)
 library(dplyr)
+library(lubridate)
 ```
 
 \clearpage
@@ -59,7 +60,6 @@ Thus far in the course the datasets we have been working with were already assem
 
 **Code:**
 ```{R}
-
 cc_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/cc.dta")
 cc_data <- cc_data %>%
   rename(parcel = var1,
@@ -109,7 +109,9 @@ cc_data_final <- cc_data_filtered %>%
 **Code:**
 ```{R}
 cc2_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/cc2.dta")
-# renamingg  variables to match the cc.dta dataset
+# renaming variables to match the cc.dta dataset
+
+# DO WE NEED TO SELECT 
 cc2_data <- cc2_data %>%
   rename(parcel = parcel__,
          date = sale_date,
@@ -119,6 +121,7 @@ cc2_data <- cc2_data %>%
          sqft = sq_ft,
          constryr = yr_blt,
          class = class)
+select(parcel, date, usecode, sales, acres, sqft, constryr, class)
 ```
 
 \clearpage
@@ -129,24 +132,19 @@ cc2_data <- cc2_data %>%
 ```{R}
 cc2_data <- cc2_data %>%
   mutate(cc = 1, lc = 0)
-
-cc_data <- cc_data %>%
-  mutate(cc = 1, lc = 0)
 ```
 \clearpage
 
 ### **Question: Compare the formatting of the date variable in the two datasets you are working with. What do you notice? How is the date formatted in the first dataset you loaded and how is it formatted in the second?**
 
 **Answer:**
-
+For the first dataset the date is formatted in "YYYYMMDD" while the second dataset is formatted in "MMDDYY"
 \clearpage
 
 ### **Question: Convert the dates reported in the second dataset to the format used in the first (YYYYMMDD).**
 
 **Code:**
 ```{R}
-# using lubridate
-library(lubridate)
 # Convert "date" column to Date class in "MMDDYY" format
 cc2_data$date <- mdy(cc2_data$date)
 cc2_data$date <- format(cc2_data$date, "%Y%m%d") 
@@ -187,6 +185,7 @@ combined_data <- rbind(cc_data_final, cc2_data_final)
 
 **Code:**
 ```{R}
+# DO WE NEED TO SELECT (WILL ASK TA tomorrow)
 lc_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/lc.dta")
 lc_data <- lc_data %>%
   rename(parcel = var1,
@@ -197,6 +196,7 @@ lc_data <- lc_data %>%
          sqft = var6,
          constryr = var7,
          class = var11)
+select(parcel, date, usecode, sales, acres, sqft, constryr, class)
 ```
 \clearpage
 
@@ -224,7 +224,10 @@ lc_data_filtered <- lc_data %>%
 ### **Question: Check that everything is compatible and add these observations to your dataset.**
 
 **Code:**
-
+```{r}
+lc_data_filtered$date <- as.Date(lc_data_filtered$date, format = "%Y%m%d")
+combined_data <- rbind(combined_data, lc_data_filtered)
+```
 \clearpage
 
 ### **Question:Repeat these steps with \`lc2.dta' where**
@@ -250,11 +253,7 @@ lc2_data <- lc2_data %>%
          sqft = var5,
          constryr = var6,
          class = var8) %>%
-  mutate(cc = 0, lc = 1) 
-
-lc2_data_filtered <- lc2_data %>%
-  filter(!is.na(date), date <= 20001300)
-
+select(parcel, date, sales, acres, sqft, constryr, class)
 ```
 \clearpage
 
@@ -277,8 +276,12 @@ lc2_data_filtered <- lc2_data %>%
          date > 20001300)
 ```
 
-This QUestion is missing the second part
-
+This question is missing the second part (WILL CHECK WITH TA tomorrow)
+```{r}
+# QUESTION: 10561 observations? in combined_data
+lc2_data_filtered$date <- as.Date(lc2_data_filtered$date, format = "%Y%m%d")
+combined_data <- rbind(combined_data, lc2_data_filtered)
+```
 \clearpage
 
 ### **Question: Now that we have merged the four files of sales data, we need to create some additional variables and do some further data cleaning. Generate the following seven variables:**
