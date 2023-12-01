@@ -325,6 +325,8 @@ combined_data <- combined_data %>%
 
 ```{r}
 # Variables: acre_squared
+combined_data <- combined_data %>%
+  mutate(acre_squared = acres^2)
 ```
 
 ```{r}
@@ -364,7 +366,48 @@ combined_data <- combined_data %>%
 **We also want to make sure there are no duplicate sales records in the data. Drop the duplicate of any observation that shares the same parcel number and sales date, or that shares the same sales price, date, cc, and acres.**
 
 **Code:**
+```{r}
+# Drop if the sale price was 0
+combined_data <- subset(combined_data, sales != 0)
+```
 
+```{r}
+# If the home is older then 150
+combined_data <- subset(combined_data, home_age <= 150)
+```
+
+```{r}
+# If the square footage is 0
+combined_data <- subset(combined_data, sqft != 0)
+```
+
+```{r}
+# If the square footage is greater than 10000.
+# 10159 observations till now
+combined_data <- subset(combined_data, sqft <= 10000)
+```
+
+```{r}
+# Drop if date is after Sept. 2002 since that is when the data was collected.
+combined_data <- subset(combined_data, date <= as.Date("2002-09-30"))
+```
+
+```{r}
+# Drop if the month is 0.
+combined_data <- subset(combined_data, sales_month != 0)
+```
+
+```{r}
+# If the age of the home is negative, replace with 0.
+combined_data <- combined_data %>%
+  mutate(home_age = ifelse(home_age < 0, 0, home_age))
+```
+
+```{r}
+# If the day is 32 replace with 31.
+combined_data <- combined_data %>%
+  mutate(sales_day = ifelse(sales_day == 32, 31, home_age))
+```
 \clearpage
 
 ### **Question: Modify the class variable so that it is discreet: round the value up to the nearest 0.5 increment between 0 and 4.5. Set any values greater than 5 to 0.**
