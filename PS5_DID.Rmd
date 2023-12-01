@@ -425,13 +425,25 @@ combined_data <- combined_data %>%
 ### **Question: Create a identifying variable that identifies (ie will be the same for) all home sales that occurred within a particular month in a specific county.**
 
 **Code:**
-
+```{r}
+combined_data <- combined_data %>%
+  mutate(home_iden = (combined_data$sales_month*1)+(combined_data$cc*100000)+(combined_data$sales_year*100))
+```
 \clearpage
 
 ### **Question: We want to adjust the sales price using the Nevada Home Price Index (`nvhpi`) which is available for each quarter in the `price.dta` file. Merge the index into your dataset and calculate the index adjusted real sales price (**$\frac{salesprice*100}{nvhpi}$) as well as the log of this real sales price. What is the base year and quarter of this index?
 
 **Code:**
+```{r}
+price_data <- read_dta("price.dta")
+price_data <- price_data %>%
+  rename(sales_year = year,
+         quarter_within = quarter)
+```
 
+```{r}
+combined_data <- left_join(combined_data, price_data,by=c("sales_year", "quarter_within"))
+```
 **Answer:**
 
 \clearpage
@@ -439,7 +451,10 @@ combined_data <- combined_data %>%
 ### **Question: In the paper, Davis maps the cumulative number of leukemia cases that occur in Churchill county in figure 1. For simplicity, we assume a binary treatment: the cancer cluster did not affect outcomes prior to 2000 and did after. Generate a "Post" indicator for years after 1999.**
 
 **Code:**
-
+```{r}
+combined_data <- combined_data %>%
+  mutate(post_1999 = ifelse(sales_year > 1999, 1, 0))
+```
 \clearpage
 
 # Summary Statistics:
