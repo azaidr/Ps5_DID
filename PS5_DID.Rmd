@@ -109,9 +109,6 @@ cc_data_final <- cc_data_filtered %>%
 **Code:**
 ```{R}
 cc2_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/cc2.dta")
-# renaming variables to match the cc.dta dataset
-
-# DO WE NEED TO SELECT .... Yes you need to select otherwise the data sets wont merge. 
 cc2_data <- cc2_data %>%
   rename(parcel = parcel__,
          date = sale_date,
@@ -120,7 +117,7 @@ cc2_data <- cc2_data %>%
          acres = acreage,
          sqft = sq_ft,
          constryr = yr_blt,
-         class = class)
+         class = class)%>%
 select(parcel, date, usecode, sales, acres, sqft, constryr, class)
 ```
 
@@ -185,8 +182,6 @@ combined_data <- rbind(cc_data_final, cc2_data_final)
 
 **Code:**
 ```{R}
-# DO WE NEED TO SELECT (WILL ASK TA tomorrow) .... Yes you need to select otherwise the data sets wont merge. 
-cc2_data <- cc2_data %>%
 lc_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/lc.dta")
 lc_data <- lc_data %>%
   rename(parcel = var1,
@@ -196,7 +191,7 @@ lc_data <- lc_data %>%
          acres = var5,
          sqft = var6,
          constryr = var7,
-         class = var11)
+         class = var11)%>%
 select(parcel, date, usecode, sales, acres, sqft, constryr, class)
 ```
 \clearpage
@@ -277,9 +272,7 @@ lc2_data_filtered <- lc2_data %>%
          date > 20001300)
 ```
 
-This question is missing the second part (WILL CHECK WITH TA tomorrow)
 ```{r}
-# QUESTION: 10561 observations? in combined_data
 lc2_data_filtered$date <- as.Date(lc2_data_filtered$date, format = "%Y%m%d")
 combined_data <- rbind(combined_data, lc2_data_filtered)
 ```
