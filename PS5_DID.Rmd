@@ -111,7 +111,7 @@ cc_data_final <- cc_data_filtered %>%
 cc2_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/cc2.dta")
 # renaming variables to match the cc.dta dataset
 
-# DO WE NEED TO SELECT 
+# DO WE NEED TO SELECT .... Yes you need to select otherwise the data sets wont merge. 
 cc2_data <- cc2_data %>%
   rename(parcel = parcel__,
          date = sale_date,
@@ -185,7 +185,8 @@ combined_data <- rbind(cc_data_final, cc2_data_final)
 
 **Code:**
 ```{R}
-# DO WE NEED TO SELECT (WILL ASK TA tomorrow)
+# DO WE NEED TO SELECT (WILL ASK TA tomorrow) .... Yes you need to select otherwise the data sets wont merge. 
+cc2_data <- cc2_data %>%
 lc_data <- read_dta("/Users/redaabouzaid/Documents/GitHub/Ps5_DID/lc.dta")
 lc_data <- lc_data %>%
   rename(parcel = var1,
