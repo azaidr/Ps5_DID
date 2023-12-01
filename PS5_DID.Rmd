@@ -444,6 +444,18 @@ price_data <- price_data %>%
 ```{r}
 combined_data <- left_join(combined_data, price_data,by=c("sales_year", "quarter_within"))
 ```
+
+```{r}
+combined_data <- combined_data %>%
+  mutate(iarsp = (sales*100)/nvhpi)
+#index adjusted real sales price = (salesprice*100)/nvhpi
+```
+
+```{r}
+combined_data <- combined_data %>%
+  mutate(iarsp_log = (log_nomi_price*100)/nvhpi)
+#index adjusted real sales price = (log of this real price*100)/nvhpi
+```
 **Answer:**
 
 \clearpage
